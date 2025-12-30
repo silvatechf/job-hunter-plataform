@@ -1,0 +1,16 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Instala dependências
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# COPIA A PASTA SRC INTEIRA (Incluindo subpastas como 'services')
+COPY src/ ./src/
+
+# Define o PYTHONPATH para a pasta src para que 'import services' funcione
+ENV PYTHONPATH=/app/src
+
+# Comando de inicialização
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

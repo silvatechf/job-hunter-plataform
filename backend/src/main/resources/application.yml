@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ai-job-hunter-backend
+  
+  main:
+    allow-bean-definition-overriding: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/ajh_db}
+    username: ${DB_USERNAME:ajh_user}
+    password: ${DB_PASSWORD:ajh_password}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update 
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+# Configurações de Segurança e IA
+application:
+  security:
+    jwt:
+      secret-key: ${AJH_JWT_SECRET:Ck+D5hG7q3S2aY8xL1vB4zJ9oN6pM3rI0tQ7uR4sV1wX8yZ0aH5iE2fG9kC8mP7nO4qR3sT6uV2wX5yZ8aB1cE4fG7hI0jK3lM6nO9pQ2rS5tU8vW1xY4z70A}
+      expiration: 86400000 # 24 horas
+
+ajh:
+  ai-engine:
+    url: ${AJH_AI_ENGINE_URL:http://ai-engine:8000/api/v1/analyze-cv}
+
+# CORREÇÃO: O logging precisa ser uma raiz própria no YAML
+logging:
+  level:
+    org.springframework.security: DEBUG

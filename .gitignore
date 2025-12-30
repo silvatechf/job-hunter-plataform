@@ -1,0 +1,48 @@
+# ==========================================================
+# GERAL: Ignora arquivos de sistemas operacionais e IDEs
+# ==========================================================
+.DS_Store
+.vscode/
+.idea/
+*.iml
+
+
+.env
+/ai-engine/.env
+/frontend/.env
+
+# ==========================================================
+# BACKEND (Java/Maven/Spring Boot)
+# ==========================================================
+# Diretórios de build
+/backend/target/
+
+# Logs e Dados temporários
+*.log
+*.tmp
+
+# ==========================================================
+# AI ENGINE (Python)
+# ==========================================================
+# Ambiente virtual Python
+/ai-engine/venv/
+# Arquivos de cache e compilação Python
+__pycache__/
+*.pyc
+*.pyd
+*.so
+
+# ==========================================================
+# FRONTEND (React/Node)
+# ==========================================================
+# Dependências instaladas
+/frontend/node_modules
+# Diretórios de build do Next.js/React
+/frontend/out
+/frontend/.next
+
+# ==========================================================
+# INFRAESTRUTURA
+# ==========================================================
+# Diretórios de volume do Docker (se estiverem mapeados localmente)
+/volumes/

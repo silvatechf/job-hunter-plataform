@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ajh_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ajh_user
+      POSTGRES_PASSWORD: ajh_password
+      POSTGRES_DB: ajh_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ajh_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ajh_user -d ajh_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ajh-network
+
+  ai-engine:
+    container_name: ajh_ai_engine
+    build:
+      context: ./ai-engine          # Docker olha para dentro desta pasta
+      dockerfile: Dockerfile.ai
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_API_KEY=AIzaSyDaQ0xx1HSj5WLmeccKY343kQDjLuiPbns
+    networks:
+      - ajh-network
+
+  backend:
+    container_name: ajh_backend
+    build:
+      context: .                    # O backend continua usando a raiz para pegar o pom.xml
+      dockerfile: Dockerfile.backend
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ajh_db
+      SPRING_DATASOURCE_USERNAME: ajh_user
+      SPRING_DATASOURCE_PASSWORD: ajh_password
+      AJH_AI_ENGINE_URL: http://ai-engine:8000
+      AJH_JWT_SECRET: Ck+D5hG7q3S2aY8xL1vB4zJ9oN6pM3rI0tQ7uR4sV1wX8yZ0aH5iE2fG9kC8mP7nO4qR3sT6uV2wX5yZ8aB1cE4fG7hI0jK3lM6nO9pQ2rS5tU8vW1xY4z70A
+      AJH_JWT_EXPIRATION: 86400000
+    depends_on:
+      db:
+        condition: service_healthy
+      ai-engine:
+        condition: service_started
+    networks:
+      - ajh-network
+
+volumes:
+  ajh_data:
+
+networks:
+  ajh-network:
+    driver: bridge

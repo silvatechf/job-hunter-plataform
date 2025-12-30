@@ -1,0 +1,29 @@
+# Stage 1: Build com Maven e JDK 21
+FROM eclipse-temurin:21-jdk-alpine AS builder
+WORKDIR /app
+
+# Instala o Maven manualmente
+RUN apk add --no-cache curl tar bash
+ARG MAVEN_VERSION=3.9.6
+RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar -xzf - -C /opt && \
+    ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn
+
+# Copia apenas o pom e baixa dependências (cache)
+COPY backend/pom.xml .
+RUN mvn dependency:go-offline
+
+# Copia o código e compila
+COPY backend/src ./src
+RUN mvn clean package -DskipTests
+
+# Stage 2: Runtime com JRE 21
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+# CORREÇÃO AQUI: Copiamos o JAR gerado no Stage 1 para o nome fixo app.jar
+COPY --from=builder /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+# Comando para rodar a aplicação
+ENTRYPOINT ["java", "-jar", "app.jar"]
