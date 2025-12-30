@@ -30,7 +30,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - GOOGLE_API_KEY=AIzaSyDaQ0xx1HSj5WLmeccKY343kQDjLuiPbns
+      - GOOGLE_API_KEY="yourapikey"
     networks:
       - ajh-network
 
