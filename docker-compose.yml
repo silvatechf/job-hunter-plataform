@@ -47,7 +47,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ajh_user
       SPRING_DATASOURCE_PASSWORD: ajh_password
       AJH_AI_ENGINE_URL: http://ai-engine:8000
-      AJH_JWT_SECRET: Ck+D5hG7q3S2aY8xL1vB4zJ9oN6pM3rI0tQ7uR4sV1wX8yZ0aH5iE2fG9kC8mP7nO4qR3sT6uV2wX5yZ8aB1cE4fG7hI0jK3lM6nO9pQ2rS5tU8vW1xY4z70A
+      AJH_JWT_SECRET: use your strong key
       AJH_JWT_EXPIRATION: 86400000
     depends_on:
       db:
